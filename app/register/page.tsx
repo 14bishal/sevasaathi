@@ -9,10 +9,10 @@ import Link from 'next/link'
 export default function RegisterPage() {
   const [success, setSuccess] = useState<{ profileUrl: string; phone: string } | null>(null)
 
-  if (!success) {
+  if (success) {
     return <RegisterSuccess
-      profileUrl={"/singtam-east-sikkim/electrician/bishal"}
-      phone={"8695710808"}
+      profileUrl={success?.profileUrl}
+      phone={success?.phone}
       onReset={() => setSuccess(null)}
     />
   }
