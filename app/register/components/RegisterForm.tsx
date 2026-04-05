@@ -335,7 +335,7 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
       </button>
 
       <p className="text-xs text-center" style={{ color: 'var(--color-charcoal-60)' }}>
-        By registering, you agree to Madad&apos;s terms. Your profile will be publicly visible on Google.
+        By registering, you agree to Sevasaathi&apos;s terms. Your profile will be publicly visible on Google.
       </p>
     </form>
   )

@@ -35,7 +35,7 @@ export default function RegisterPage() {
             Register Your Trade
           </h1>
           <p className="text-sm max-w-sm mx-auto" style={{ color: 'var(--color-charcoal-60)' }}>
-            Create your free profile on Madad. Customers find you on Google and call you directly.
+            Create your free profile on Sevasaathi. Customers find you on Google and call you directly.
           </p>
         </div>
 

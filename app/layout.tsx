@@ -10,14 +10,14 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Madad — Find Trusted Skilled Workers Near You',
-    template: '%s | Madad',
+    default: 'Sevasaathi — Find Trusted Skilled Workers Near You',
+    template: '%s | Sevasaathi',
   },
   description:
-    'Madad connects you with verified carpenters, electricians, plumbers, painters, and other skilled workers in your neighbourhood. No middlemen.',
+    'Sevasaathi connects you with verified carpenters, electricians, plumbers, painters, and other skilled workers in your neighbourhood. No middlemen.',
   keywords: ['electrician', 'plumber', 'carpenter', 'skilled workers', 'India', 'local workers'],
   openGraph: {
-    siteName: 'Madad',
+    siteName: 'Sevasaathi',
     type: 'website',
     locale: 'en_IN',
   },

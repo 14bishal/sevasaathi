@@ -9,7 +9,7 @@ export default function WorkerDashboard() {
       <header className="bg-white border-b" style={{ borderColor: '#e8e4df' }}>
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="text-xl font-bold" style={{ color: 'var(--color-amber-dark)' }}>
-            Madad
+            Sevasaathi
           </Link>
         </div>
       </header>

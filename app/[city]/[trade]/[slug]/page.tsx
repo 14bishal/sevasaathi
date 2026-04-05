@@ -260,7 +260,7 @@ export default async function WorkerProfilePage({ params }: PageProps) {
                 {worker.is_verified && (
                   <li className="flex items-center gap-2.5">
                     <span className="text-base" aria-hidden="true">✅</span>
-                    <span style={{ color: 'var(--color-teal-dark)' }}>Verified by Madad</span>
+                    <span style={{ color: 'var(--color-teal-dark)' }}>Verified by Sevasaathi</span>
                   </li>
                 )}
               </ul>

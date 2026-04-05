@@ -9,7 +9,7 @@ interface Props {
 
 export default function WhatsAppShareButton({ phone, fullUrl }: Props) {
     const message = [
-        'Namaste! Your Madad profile is ready.',
+        'Namaste! Your Sevasaathi profile is ready.',
         '',
         'View your profile:',
         fullUrl,

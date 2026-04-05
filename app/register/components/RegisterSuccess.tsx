@@ -29,7 +29,7 @@ export default function RegisterSuccess({ profileUrl, phone, onReset }: Register
             Your profile is live!
           </h1>
           <p className="text-sm mb-6" style={{ color: 'var(--color-charcoal-60)' }}>
-            Customers can now find you on Madad. Share your profile link to get more work.
+            Customers can now find you on Sevasaathi. Share your profile link to get more work.
           </p>
 
           <div

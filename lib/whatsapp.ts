@@ -12,5 +12,5 @@ export function buildWhatsAppUrl(phone: string, message?: string): string {
  * Default greeting message sent when a customer taps WhatsApp on a worker profile.
  */
 export function buildWorkerContactMessage(workerName: string, trade: string): string {
-  return `Hi ${workerName}, I found your profile on Madad. I need a ${trade.toLowerCase()} — are you available?`
+  return `Hi ${workerName}, I found your profile on Sevasaathi. I need a ${trade.toLowerCase()} — are you available?`
 }

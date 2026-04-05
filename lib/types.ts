@@ -1,4 +1,4 @@
-// Shared TypeScript types for Madad — replaces Prisma's generated types.
+// Shared TypeScript types for Sevasaathi — replaces Prisma's generated types.
 // Keep in sync with the Supabase table columns.
 
 export type Trade =
