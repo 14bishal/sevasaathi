@@ -23,6 +23,7 @@ export const WorkerRegistrationSchema = z.object({
     .or(z.literal('')),
   experience: z.coerce.number().min(0).max(50),
   bio: z.string().max(300).optional().or(z.literal('')),
+  profile_pic_url: z.string().url().optional(),
 })
 
 export type WorkerRegistrationInput = z.infer<typeof WorkerRegistrationSchema>

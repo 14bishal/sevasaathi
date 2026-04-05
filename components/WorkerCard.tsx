@@ -14,7 +14,7 @@ interface WorkerCardProps {
     area: string
     experience: number
     is_verified: boolean
-    photo_url: string | null
+    profile_pic_url: string | null
     reviews: { rating: number }[]
   }
 }
@@ -69,9 +69,9 @@ export default function WorkerCard({ worker }: WorkerCardProps) {
     >
       <div className="flex items-start gap-4">
         {/* Avatar */}
-        {worker.photo_url ? (
+        {worker.profile_pic_url ? (
           <img
-            src={worker.photo_url}
+            src={worker.profile_pic_url}
             alt={worker.name}
             className="w-14 h-14 rounded-xl object-cover flex-shrink-0"
           />

@@ -93,7 +93,7 @@ export default async function WorkerProfilePage({ params }: PageProps) {
         worstRating: 1,
       },
     }),
-    ...(worker.photo_url && { image: worker.photo_url }),
+    ...(worker.profile_pic_url && { image: worker.profile_pic_url }),
   }
 
   return (
@@ -133,8 +133,8 @@ export default async function WorkerProfilePage({ params }: PageProps) {
             {/* Profile card */}
             <article className="bg-white rounded-2xl p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
               <div className="flex items-start gap-4">
-                {worker.photo_url ? (
-                  <img src={worker.photo_url} alt={worker.name} className="w-20 h-20 rounded-2xl object-cover flex-shrink-0" />
+                {worker.profile_pic_url ? (
+                  <img src={worker.profile_pic_url} alt={worker.name} className="w-20 h-20 rounded-2xl object-cover flex-shrink-0" />
                 ) : (
                   <div
                     className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0"

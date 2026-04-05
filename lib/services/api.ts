@@ -11,6 +11,7 @@ interface RegisterWorkerPayload {
   pincode?: string
   experience: number
   bio?: string
+  profile_pic_url?: string
 }
 
 export async function registerWorker(data: RegisterWorkerPayload) {

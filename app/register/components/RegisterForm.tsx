@@ -5,6 +5,7 @@ import { registerWorker } from '@/lib/services/api'
 import { INITIAL_FORM } from '@/lib/constants'
 import InputField, { inputStyle, focusBorder, blurBorder } from '@/components/common/InputField'
 import { usePincode } from '@/hooks/usePincode'
+import CameraCapture from '@/components/common/CameraCapture'
 import dynamic from 'next/dynamic'
 
 const TradeSelect = dynamic(
@@ -37,9 +38,10 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
   // const [isMounted, setIsMounted] = useState(false)
   const [form, setForm] = useState<FormData>(INITIAL_FORM)
   const [errors, setErrors] = useState<FieldErrors>({})
+  const [isWhatsappSame, setIsWhatsappSame] = useState(false)
+  const [profilePicFile, setProfilePicFile] = useState<File | null>(null)
 
   const { data: pincodeData, loading: pincodeLoading, error: pincodeError } = usePincode(form.pincode)
-  console.log('pincodeData', pincodeData);
 
 
   useEffect(() => {
@@ -74,7 +76,12 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
     const newErrors: FieldErrors = {}
     if (form.name.trim().length < 2) newErrors.name = ['Name must be at least 2 characters.']
     if (!/^[6-9]\d{9}$/.test(form.phone)) newErrors.phone = ['Enter a valid 10-digit Indian mobile number.']
-    if (form.whatsapp && !/^[6-9]\d{9}$/.test(form.whatsapp)) newErrors.whatsapp = ['Enter a valid 10-digit number.']
+
+    if (!isWhatsappSame) {
+      if (!form.whatsapp) newErrors.whatsapp = ['WhatsApp number is required.']
+      else if (!/^[6-9]\d{9}$/.test(form.whatsapp)) newErrors.whatsapp = ['Enter a valid 10-digit number.']
+    }
+
     if (!form.trade) newErrors.trade = ['Please select your trade.']
     if (form.city.trim().length < 2) newErrors.city = ['City is required.']
     if (form.area.trim().length < 2) newErrors.area = ['Area is required.']
@@ -91,10 +98,31 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
     console.log('form', { form })
 
     try {
+      let finalProfilePicUrl: string | undefined = undefined
+
+      if (profilePicFile) {
+        const prefix = new Date().getTime().toString()
+        const uniqueFileName = `${prefix}-${profilePicFile.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`
+
+        // We now upload directly via our API instead of presigned URLs
+        const formData = new FormData()
+        formData.append('file', profilePicFile, uniqueFileName)
+
+        const pRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        })
+
+        if (!pRes.ok) throw new Error('Failed to upload profile picture.')
+
+        const { publicUrl } = await pRes.json()
+        finalProfilePicUrl = publicUrl
+      }
+
       const data = await registerWorker({
         name: form.name.trim(),
         phone: form.phone,
-        whatsapp: form.whatsapp || undefined,
+        whatsapp: isWhatsappSame ? form.phone : form.whatsapp,
         trade: form.trade,
         city: form.city.trim(),
         state: form.state.trim(),
@@ -102,6 +130,7 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
         pincode: form.pincode || undefined,
         experience: Number(form.experience),
         bio: form.bio.trim() || undefined,
+        profile_pic_url: finalProfilePicUrl,
       })
 
       onSuccess({ profileUrl: data.profileUrl, phone: form.phone })
@@ -124,6 +153,19 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
       noValidate
       aria-label="Worker registration form"
     >
+      {/* Profile Picture section */}
+      <div>
+        <h2 className="text-sm font-bold uppercase tracking-wide mb-4" style={{ color: 'var(--color-charcoal-60)' }}>
+          Profile Picture
+        </h2>
+        <CameraCapture
+          onCapture={(file) => setProfilePicFile(file)}
+          onError={(msg) => setServerError(msg)}
+        />
+      </div>
+
+      <hr style={{ borderColor: '#f0ede9' }} />
+
       {/* Personal details section */}
       <div>
         <h2 className="text-sm font-bold uppercase tracking-wide mb-4" style={{ color: 'var(--color-charcoal-60)' }}>
@@ -147,38 +189,55 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
           </InputField>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <InputField id="phone" label="Mobile Number" required hint="(10 digits)" error={errors.phone?.[0]}>
-              <input
-                id="phone"
-                type="tel"
-                value={form.phone}
-                onChange={update('phone')}
-                placeholder="9876543210"
-                maxLength={10}
-                autoComplete="tel"
-                inputMode="numeric"
-                className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors"
-                style={inputStyle(!!errors.phone)}
-                onFocus={focusBorder}
-                onBlur={(e) => blurBorder(e, !!errors.phone)}
-              />
-            </InputField>
+            <div className="space-y-3">
+              <InputField id="phone" label="Mobile Number" required hint="(10 digits)" error={errors.phone?.[0]}>
+                <input
+                  id="phone"
+                  type="tel"
+                  value={form.phone}
+                  onChange={update('phone')}
+                  placeholder="9876543210"
+                  maxLength={10}
+                  autoComplete="tel"
+                  inputMode="numeric"
+                  className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors"
+                  style={inputStyle(!!errors.phone)}
+                  onFocus={focusBorder}
+                  onBlur={(e) => blurBorder(e, !!errors.phone)}
+                />
+              </InputField>
+              <label className="flex items-center space-x-2 text-sm cursor-pointer" style={{ color: 'var(--color-charcoal-60)' }}>
+                <input
+                  type="checkbox"
+                  checked={isWhatsappSame}
+                  onChange={(e) => {
+                    setIsWhatsappSame(e.target.checked)
+                    if (e.target.checked) setErrors(prev => ({ ...prev, whatsapp: undefined }))
+                  }}
+                  className="rounded w-4 h-4 cursor-pointer border-gray-300"
+                  style={{ accentColor: 'var(--color-amber-dark)' }}
+                />
+                <span>WhatsApp is same as Mobile</span>
+              </label>
+            </div>
 
-            <InputField id="whatsapp" label="WhatsApp Number" hint="(optional)" error={errors.whatsapp?.[0]}>
-              <input
-                id="whatsapp"
-                type="tel"
-                value={form.whatsapp}
-                onChange={update('whatsapp')}
-                placeholder="If different from mobile"
-                maxLength={10}
-                inputMode="numeric"
-                className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors"
-                style={inputStyle(!!errors.whatsapp)}
-                onFocus={focusBorder}
-                onBlur={(e) => blurBorder(e, !!errors.whatsapp)}
-              />
-            </InputField>
+            {!isWhatsappSame && (
+              <InputField id="whatsapp" label="WhatsApp Number" required hint="(10 digits)" error={errors.whatsapp?.[0]}>
+                <input
+                  id="whatsapp"
+                  type="tel"
+                  value={form.whatsapp}
+                  onChange={update('whatsapp')}
+                  placeholder="9876543210"
+                  maxLength={10}
+                  inputMode="numeric"
+                  className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors"
+                  style={inputStyle(!!errors.whatsapp)}
+                  onFocus={focusBorder}
+                  onBlur={(e) => blurBorder(e, !!errors.whatsapp)}
+                />
+              </InputField>
+            )}
           </div>
         </div>
       </div>

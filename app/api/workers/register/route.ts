@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
         pincode: data.pincode || null,
         experience: data.experience,
         bio: data.bio || null,
+        profile_pic_url: data.profile_pic_url || null,
       })
       .select('id, name, slug, phone, trade, city, state')
       .single()

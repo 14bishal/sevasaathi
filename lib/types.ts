@@ -26,7 +26,7 @@ export interface Worker {
   pincode: string | null
   experience: number
   bio: string | null
-  photo_url: string | null
+  profile_pic_url: string | null
   is_verified: boolean
   is_active: boolean
   created_at: string
