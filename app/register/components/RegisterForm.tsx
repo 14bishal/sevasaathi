@@ -4,9 +4,13 @@ import { useState, useEffect } from 'react'
 import { registerWorker } from '@/lib/services/api'
 import { INITIAL_FORM } from '@/lib/constants'
 import InputField, { inputStyle, focusBorder, blurBorder } from '@/components/common/InputField'
-import CreatableSelect from 'react-select/creatable'
 import { usePincode } from '@/hooks/usePincode'
-import TradeSelect from '@/components/TradeSelect'
+import dynamic from 'next/dynamic'
+
+const TradeSelect = dynamic(
+  () => import('@/components/TradeSelect'),
+  { ssr: false }
+)
 
 interface FormData {
   name: string
