@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { supabase } from '@/lib/supabase'
 import type { Trade, WorkerWithReviews } from '@/lib/types'
 import { getTradeLabel } from '@/lib/constants'
+import { formatTradeUrl } from '@/lib/trade'
 import ContactButtons from '@/components/ContactButtons'
 import ReviewForm from '@/components/ReviewForm'
 import ReviewList from '@/components/ReviewList'
@@ -58,7 +59,7 @@ export default async function WorkerProfilePage({ params }: PageProps) {
   if (
     !worker ||
     worker.city !== city.toLowerCase() ||
-    worker.trade.toLowerCase() !== trade.toLowerCase() ||
+    formatTradeUrl(worker.trade) !== trade.toLowerCase() ||
     !worker.is_active
   ) {
     notFound()

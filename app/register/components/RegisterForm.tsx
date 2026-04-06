@@ -35,7 +35,6 @@ interface RegisterFormProps {
 }
 
 export default function RegisterForm({ onSuccess }: RegisterFormProps) {
-  // const [isMounted, setIsMounted] = useState(false)
   const [form, setForm] = useState<FormData>(INITIAL_FORM)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [isWhatsappSame, setIsWhatsappSame] = useState(false)
@@ -53,9 +52,6 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
     }
   }, [pincodeData])
 
-  // useEffect(() => {
-  //   setIsMounted(true)
-  // }, [])
   const [submitting, setSubmitting] = useState(false)
   const [serverError, setServerError] = useState('')
 
@@ -94,8 +90,6 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
       setSubmitting(false)
       return
     }
-
-    console.log('form', { form })
 
     try {
       let finalProfilePicUrl: string | undefined = undefined
@@ -189,21 +183,38 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
           </InputField>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <InputField id="phone" label="Mobile Number" required hint="(10 digits)" error={errors.phone?.[0]}>
+              <input
+                id="phone"
+                type="tel"
+                value={form.phone}
+                onChange={update('phone')}
+                placeholder="9876543210"
+                maxLength={10}
+                autoComplete="tel"
+                inputMode="numeric"
+                className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors"
+                style={inputStyle(!!errors.phone)}
+                onFocus={focusBorder}
+                onBlur={(e) => blurBorder(e, !!errors.phone)}
+              />
+            </InputField>
             <div className="space-y-3">
-              <InputField id="phone" label="Mobile Number" required hint="(10 digits)" error={errors.phone?.[0]}>
+              <InputField id="whatsapp" label="WhatsApp Number" required hint="(10 digits)" error={errors.whatsapp?.[0]}>
                 <input
-                  id="phone"
+                  id="whatsapp"
                   type="tel"
-                  value={form.phone}
-                  onChange={update('phone')}
+                  value={isWhatsappSame ? form.phone : form.whatsapp}
+                  onChange={update('whatsapp')}
                   placeholder="9876543210"
                   maxLength={10}
-                  autoComplete="tel"
                   inputMode="numeric"
                   className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors"
-                  style={inputStyle(!!errors.phone)}
+                  style={inputStyle(!!errors.whatsapp)}
                   onFocus={focusBorder}
-                  onBlur={(e) => blurBorder(e, !!errors.phone)}
+                  onBlur={(e) => blurBorder(e, !!errors.whatsapp)}
+                  disabled={!form.phone}
                 />
               </InputField>
               <label className="flex items-center space-x-2 text-sm cursor-pointer" style={{ color: 'var(--color-charcoal-60)' }}>
@@ -214,30 +225,13 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
                     setIsWhatsappSame(e.target.checked)
                     if (e.target.checked) setErrors(prev => ({ ...prev, whatsapp: undefined }))
                   }}
+                  disabled={!form.phone}
                   className="rounded w-4 h-4 cursor-pointer border-gray-300"
                   style={{ accentColor: 'var(--color-amber-dark)' }}
                 />
-                <span>WhatsApp is same as Mobile</span>
+                <span>Same as Mobile Number</span>
               </label>
             </div>
-
-            {!isWhatsappSame && (
-              <InputField id="whatsapp" label="WhatsApp Number" required hint="(10 digits)" error={errors.whatsapp?.[0]}>
-                <input
-                  id="whatsapp"
-                  type="tel"
-                  value={form.whatsapp}
-                  onChange={update('whatsapp')}
-                  placeholder="9876543210"
-                  maxLength={10}
-                  inputMode="numeric"
-                  className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none transition-colors"
-                  style={inputStyle(!!errors.whatsapp)}
-                  onFocus={focusBorder}
-                  onBlur={(e) => blurBorder(e, !!errors.whatsapp)}
-                />
-              </InputField>
-            )}
           </div>
         </div>
       </div>

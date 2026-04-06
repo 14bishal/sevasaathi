@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { ALL_TRADES } from '@/lib/constants'
-import { getTradeLabel } from '@/lib/constants'
 import Header from '@/components/common/Header'
 import Footer from '@/components/common/Footer'
 import HomeFilters from '@/components/HomeFilters'
@@ -26,9 +25,8 @@ async function getActiveTrades(): Promise<string[]> {
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
-  // We explicitly DO NOT await searchParams here!
-  // This allows the page and HomeFilters to render immediately.
   const dynamicTrades = await getActiveTrades()
+  const resolvedSearchParams = await searchParams
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-warm-bg)' }}>
@@ -51,7 +49,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </Suspense>
 
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
-        <Suspense fallback={<WorkerGridSkeleton />}>
+        <Suspense key={JSON.stringify(resolvedSearchParams)} fallback={<WorkerGridSkeleton />}>
           <WorkerGrid searchParamsPromise={searchParams} />
         </Suspense>
       </main>

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import type { Trade } from '@/lib/types'
 import { getTradeLabel } from '@/lib/constants'
+import { formatTradeUrl } from '@/lib/trade'
 
 interface WorkerCardProps {
   worker: {
@@ -42,7 +43,7 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
 }
 
 export default function WorkerCard({ worker }: WorkerCardProps) {
-  const profileUrl = `/${worker.city}/${worker.trade.toLowerCase()}/${worker.slug}`
+  const profileUrl = `/${worker.city}/${formatTradeUrl(worker.trade)}/${worker.slug}`
   const avgRating =
     worker.reviews.length > 0
       ? worker.reviews.reduce((s, r) => s + r.rating, 0) / worker.reviews.length

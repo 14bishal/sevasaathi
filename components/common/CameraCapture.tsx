@@ -20,16 +20,14 @@ export default function CameraCapture({
   const streamRef = useRef<MediaStream | null>(null)
 
   const [isCapturing, setIsCapturing] = useState(false)
-  console.log('isCapturing', isCapturing);
   const [preview, setPreview] = useState<string | null>(null)
-  console.log('preview', preview)
 
   const isStartingRef = useRef(false)
 
   const startCamera = async () => {
     if (isStartingRef.current || streamRef.current) return;
     isStartingRef.current = true;
-    
+
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'user' },
@@ -53,14 +51,14 @@ export default function CameraCapture({
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
-    
+
     // 2. Deep fallback: forcibly stop any tracks currently bound to the video element
     if (videoRef.current && videoRef.current.srcObject) {
       const attachedStream = videoRef.current.srcObject as MediaStream;
       attachedStream.getTracks().forEach(track => track.stop());
       videoRef.current.srcObject = null;
     }
-    
+
     setIsCapturing(false)
   }, [])
 
