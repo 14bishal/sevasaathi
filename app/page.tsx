@@ -39,7 +39,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             className="text-sm font-semibold px-4 py-2 rounded-xl transition-opacity hover:opacity-90"
             style={{ backgroundColor: 'var(--color-amber-mid)', color: 'var(--color-amber-dark)', boxShadow: 'var(--shadow-button)' }}
           >
-            Register Your Trade
+            Register as Saathi
           </Link>
         }
       />

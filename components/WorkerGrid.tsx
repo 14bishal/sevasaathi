@@ -76,13 +76,13 @@ export default async function WorkerGrid({ searchParamsPromise }: { searchParams
         <p className="text-sm mb-6" style={{ color: 'var(--color-charcoal-60)' }}>
           Try a different trade or area. Or help us grow!
         </p>
-        <Link
+        {/* <Link
           href="/register"
           className="inline-block px-6 py-3 rounded-xl font-semibold text-sm transition-opacity hover:opacity-90"
           style={{ backgroundColor: 'var(--color-amber-mid)', color: 'var(--color-amber-dark)' }}
         >
           Register as a Worker
-        </Link>
+        </Link> */}
       </div>
     )
   }
