@@ -10,9 +10,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    // Limit upload to 1MB (1,048,576 bytes) to protect Supabase Storage
-    if (file.size > 1048576) {
-      return NextResponse.json({ error: 'File size exceeds the 1MB limit' }, { status: 413 })
+    // Limit upload to 2MB (2,097,152 bytes) to protect Supabase Storage
+    if (file.size > 2097152) {
+      return NextResponse.json({ error: 'File size exceeds the 2MB limit' }, { status: 413 })
     }
 
     // File name is safely validated on the client and passed back

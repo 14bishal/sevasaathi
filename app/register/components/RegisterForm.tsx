@@ -85,6 +85,8 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
     if (!form.experience) newErrors.experience = ['Enter years of experience.']
     else if (Number(form.experience) < 0 || Number(form.experience) > 50) newErrors.experience = ['Experience must be between 0 and 50.']
 
+    if (!profilePicFile) newErrors.profile_pic = ['Profile picture is required.']
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       setSubmitting(false)
@@ -107,9 +109,16 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
           body: formData
         })
 
-        if (!pRes.ok) throw new Error('Failed to upload profile picture.')
+        const resData = await pRes.json()
 
-        const { publicUrl } = await pRes.json()
+        if (!pRes.ok) throw new Error(resData?.error || 'Failed to upload profile picture.')
+
+        const { publicUrl, error: uploadError } = resData
+        if (uploadError) {
+          setServerError(uploadError);
+          setSubmitting(false);
+          return;
+        }
         finalProfilePicUrl = publicUrl
       }
 
@@ -150,12 +159,96 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
       {/* Profile Picture section */}
       <div>
         <h2 className="text-sm font-bold uppercase tracking-wide mb-4" style={{ color: 'var(--color-charcoal-60)' }}>
-          Profile Picture
+          Profile Picture <span className="text-red-500">*</span>
         </h2>
-        <CameraCapture
+        {/* <CameraCapture
           onCapture={(file) => setProfilePicFile(file)}
           onError={(msg) => setServerError(msg)}
-        />
+        /> */}
+        <div className="space-y-3">
+          {!profilePicFile ? (
+            <div>
+              <input
+                type="file"
+                accept="image/jpeg, image/jpg, image/png, image/webp"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+
+                  const validTypes = ['image/jpeg', 'image/png', 'image/webp']
+                  if (!validTypes.includes(file.type)) {
+                    setErrors(prev => ({ ...prev, profile_pic: ['Please upload a valid image (JPG, PNG, WebP).'] }))
+                    e.target.value = ''
+                    setProfilePicFile(null)
+                    return
+                  }
+
+                  const maxSize = 2 * 1024 * 1024 // 2MB
+                  if (file.size > maxSize) {
+                    setErrors(prev => ({ ...prev, profile_pic: ['File size must be less than 2MB.'] }))
+                    e.target.value = ''
+                    setProfilePicFile(null)
+                    return
+                  }
+
+                  setServerError('')
+                  setErrors(prev => ({ ...prev, profile_pic: undefined }))
+                  setProfilePicFile(file)
+                }}
+                className={`block w-full text-sm 
+                  file:mr-4 file:py-2.5 file:px-4
+                  file:rounded-xl file:border file:border-transparent
+                  file:text-sm file:font-semibold
+                  cursor-pointer rounded-xl px-3 py-2.5 outline-none transition-colors border
+                  ${errors.profile_pic
+                    ? 'border-red-400 bg-red-50 text-red-600 file:bg-red-100 file:text-red-700 hover:file:opacity-90'
+                    : 'border-red-200 bg-red-50 text-red-500 file:bg-red-100 file:text-red-700 hover:file:bg-red-200'}`}
+              />
+              {errors.profile_pic && (
+                <div
+                  style={{ color: '#ea1818ff' }}
+                  role="alert"
+                  className="text-xs mt-1 ml-1 font-medium">
+                  {errors.profile_pic[0]}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center justify-between p-3 border border-green-400 rounded-xl bg-green-50">
+              <div className="flex items-center space-x-4 overflow-hidden">
+                <div className="w-14 h-14 rounded-lg bg-white overflow-hidden flex-shrink-0 border border-green-200 shadow-sm">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={URL.createObjectURL(profilePicFile)}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex flex-col flex-1 overflow-hidden">
+                  <p className="text-sm font-semibold text-green-800 truncate" title={profilePicFile.name}>
+                    {profilePicFile.name}
+                  </p>
+                  <p className="text-xs text-green-600 mt-0.5 font-medium">
+                    {(profilePicFile.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setProfilePicFile(null)}
+                className="p-2 ml-3 bg-white border border-green-200 hover:bg-red-50 hover:border-red-100 rounded-full transition-colors flex-shrink-0 shadow-sm"
+                title="Remove picture"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://img.icons8.com/?size=100&id=VlO1zjsC88sT&format=png&color=000000"
+                  alt="Delete"
+                  className="w-4 h-4 opacity-70 hover:opacity-100 transition-opacity"
+                />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <hr style={{ borderColor: '#f0ede9' }} />

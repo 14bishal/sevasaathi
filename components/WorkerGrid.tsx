@@ -69,8 +69,12 @@ export default async function WorkerGrid({ searchParamsPromise }: { searchParams
 
   if (workers.length === 0) {
     return (
-      <div className="text-center py-16">
-        <h3 className="font-bold text-lg mb-2" style={{ color: 'var(--color-charcoal)' }}>
+      <div className="text-center flex items-center justify-center flex-col py-6">
+        <img
+          src="https://vuhbrijyskgdvfcioxgz.supabase.co/storage/v1/object/public/website-assets/worker-not-found.png"
+          width={300} height={300} alt="not-found"
+        />
+        <h3 className="font-bold text-lg mt-4" style={{ color: 'var(--color-charcoal)' }}>
           No workers found
         </h3>
         <p className="text-sm mb-6" style={{ color: 'var(--color-charcoal-60)' }}>
